@@ -133,12 +133,9 @@ const DrawingCanvas: React.FC = () => {
       {/* Header */}
       <div className="text-center mb-4">
         <div className="w-full relative">
-          <Image
-            src="/path/to/your/image.jpg"
+          <img
+            src={imagePreview}
             alt="Description of the image"
-            width={500} // Specify the width
-            height={300} // Specify the height
-            layout="responsive" // Optional: makes the image responsive
           />
           <div className="absolute top-2 right-2">
             <button

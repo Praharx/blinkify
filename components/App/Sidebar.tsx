@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 export const runtime = "edge";
 export function SidebarDemo({children}: {children: any}) {
   const { user, isLoaded, isSignedIn } = useUser();
+  const [open, setOpen] = useState(false);
   if(!isLoaded || !isSignedIn) {
     return null;
   }
@@ -49,7 +50,7 @@ export function SidebarDemo({children}: {children: any}) {
       ),
     },
   ];
-  const [open, setOpen] = useState(false);
+  
   return (
     <div
       className={cn(
