@@ -15,7 +15,11 @@ const nextConfig = {
       "assets.aceternity.com",
       "unsplash.com"
     ],
-  }, 
+  },
+  experimental: {
+    workerThreads: false,
+    cpus: 1
+  },
 };
 
 export default nextConfig;
