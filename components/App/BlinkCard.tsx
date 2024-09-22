@@ -3,6 +3,7 @@ import { useDrop } from 'react-dnd';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from 'axios';
+import Image from 'next/image';
 
 const CLOUDFRONT_URL = process.env.NEXT_PUBLIC_CLOUDFRONT_URL;
 export const runtime = "edge";
@@ -132,7 +133,13 @@ const DrawingCanvas: React.FC = () => {
       {/* Header */}
       <div className="text-center mb-4">
         <div className="w-full relative">
-          <img src={imagePreview} alt="Solana Foundation" className="mx-auto w-full mb-2 rounded" />
+          <Image
+            src="/path/to/your/image.jpg"
+            alt="Description of the image"
+            width={500} // Specify the width
+            height={300} // Specify the height
+            layout="responsive" // Optional: makes the image responsive
+          />
           <div className="absolute top-2 right-2">
             <button
               onClick={() => document.getElementById('fileInput')?.click()}

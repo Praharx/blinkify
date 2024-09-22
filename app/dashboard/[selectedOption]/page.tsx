@@ -3,7 +3,7 @@
 import React from 'react'
 import { useParams } from 'next/navigation'
 import MainContent from "@/components/App/MainContent"
-function page() {
+function Page() {
   const {selectedOption} = useParams();
   return (
     <div>
@@ -12,4 +12,4 @@ function page() {
   )
 }
 
-export default page
+export default Page
