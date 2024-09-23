@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,22 +7,19 @@ import Image from 'next/image';
 
 const CLOUDFRONT_URL = process.env.NEXT_PUBLIC_CLOUDFRONT_URL;
 export const runtime = "edge";
+
 interface DroppedItem {
   id: number;
   content: string;
   type: string;
+  options?: string[];
+  isEditing?: boolean;
 }
 
 interface DragItem {
   type: string;
   content: string;
-}
-
-interface UploadProps {
-  uploading: Boolean,
-  setUploading: Dispatch<SetStateAction<boolean>>,
-  imagePreview: string | null,
-  setImagePreview: Dispatch<SetStateAction<string | null>>
+  options?: string[];
 }
 
 const DrawingCanvas: React.FC = () => {
@@ -36,7 +33,13 @@ const DrawingCanvas: React.FC = () => {
   const [, drop] = useDrop<DragItem, void, {}>({
     accept: 'BUTTON',
     drop: (item) => {
-      const newItem: DroppedItem = { id: Date.now(), content: item.content, type: item.type };
+      const newItem: DroppedItem = { 
+        id: Date.now(), 
+        content: item.content, 
+        type: item.type, 
+        options: item.options,
+        isEditing: false
+      };
       setDroppedItems((prevItems) => [...prevItems, newItem]);
     },
   });
@@ -59,7 +62,7 @@ const DrawingCanvas: React.FC = () => {
         console.error('No file selected');
         return;
       }
-      
+
       const formData = new FormData();
       formData.set("bucket", response.data.fields["bucket"]);
       formData.set("X-Amz-Algorithm", response.data.fields["X-Amz-Algorithm"]);
@@ -82,48 +85,107 @@ const DrawingCanvas: React.FC = () => {
     }
   }
 
-  const renderInput = (item: DroppedItem) => {
+  const handleEdit = useCallback((id: number) => {
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, isEditing: !item.isEditing } : item
+      )
+    );
+  }, []);
+
+  const handleOptionChange = useCallback((id: number, index: number, value: string) => {
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? { ...item, options: item.options?.map((opt, i) => (i === index ? value : opt)) }
+          : item
+      )
+    );
+  }, []);
+
+  const handleAddOption = useCallback((id: number) => {
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? { ...item, options: [...(item.options || []), `Option ${(item.options?.length || 0) + 1}`] }
+          : item
+      )
+    );
+  }, []);
+
+  const handleRemoveOption = useCallback((id: number, index: number) => {
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? { ...item, options: item.options?.filter((_, i) => i !== index) }
+          : item
+      )
+    );
+  }, []);
+
+  const renderInput = useCallback((item: DroppedItem) => {
     const baseClassName = "w-full px-3 sm:px-4 py-2 text-sm sm:text-base text-white bg-[#1F2226] border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500";
 
-    switch (item.type) {
-      case 'checkbox':
-      case 'radio':
-        return (
-          <div className="flex items-center">
+    const handleRemove = (id: number) => {
+      setDroppedItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    };
+
+    return (
+      <div className="flex flex-col space-y-2">
+        <div className="flex items-center space-x-2">
+          {item.type === 'checkbox' || item.type === 'radio' ? (
+            <div className="flex items-center">
+              <input
+                type={item.type}
+                id={`${item.type}-${item.id}`}
+                className="mr-2"
+              />
+              <label htmlFor={`${item.type}-${item.id}`} className="text-white">{item.content}</label>
+            </div>
+          ) : item.type === 'textarea' ? (
+            <textarea
+              placeholder={item.content}
+              className={`${baseClassName} h-24 resize-none`}
+            />
+          ) : item.type === 'select' ? (
+            <select className={baseClassName}>
+              <option value="">{item.content}</option>
+              {item.options?.map((option, index) => (
+                <option key={index} value={option}>{option}</option>
+              ))}
+            </select>
+          ) : (
             <input
               type={item.type}
-              id={`${item.type}-${item.id}`}
-              className="mr-2"
+              placeholder={item.content}
+              className={baseClassName}
             />
-            <label htmlFor={`${item.type}-${item.id}`} className="text-white">{item.content}</label>
+          )}
+          <Button onClick={(e) => {e.preventDefault(); handleRemove(item.id)}} className="text-white px-3 py-1 rounded-lg hover:bg-red-600 transition duration-300">🗑️</Button>
+          {(item.type === 'select' || item.type === 'radio' || item.type === 'checkbox') && (
+            <Button onClick={(e) =>{e.preventDefault(); handleEdit(item.id)}} className="text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition duration-300">
+              {item.isEditing ? '✔️' : '✏️'}
+            </Button>
+          )}
+        </div>
+        {item.isEditing && (item.type === 'select' || item.type === 'radio' || item.type === 'checkbox') && (
+          <div className="ml-4 space-y-2">
+            {item.options?.map((option, index) => (
+              <div key={index} className="flex items-center space-x-2">
+                <Input
+                  value={option}
+                  onChange={(e) => handleOptionChange(item.id, index, e.target.value)}
+                  className="flex-grow"
+                />
+                <Button onClick={(e) => {e.preventDefault(); handleRemoveOption(item.id, index)}} className="text-white px-2 py-1 rounded-lg hover:bg-red-600 transition duration-300">-</Button>
+              </div>
+            ))}
+            <Button onClick={(e) => {e.preventDefault(); handleAddOption(item.id)}} className="text-white px-2 py-1 rounded-lg hover:bg-green-600 transition duration-300">+ Add Option</Button>
           </div>
-        );
-      case 'textarea':
-        return (
-          <textarea
-            placeholder={item.content}
-            className={`${baseClassName} h-24 resize-none`}
-          />
-        );
-      case 'select':
-        return (
-          <select className={baseClassName}>
-            <option value="">{item.content}</option>
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-          </select>
-        );
-      default:
-        return (
-          <input
-            type={item.type}
-            placeholder={item.content}
-            className={baseClassName}
-          />
-        );
-    }
-  };
+        )}
+      </div>
+    );
+  }, [handleEdit, handleOptionChange, handleAddOption, handleRemoveOption]);
 
   return (
     //@ts-ignore
@@ -139,8 +201,7 @@ const DrawingCanvas: React.FC = () => {
           />
           <div className="absolute top-2 right-2">
             <button
-            //@ts-ignore
-              onClick={(e) => {document.getElementById('fileInput')?.click(); chooseFile(e)}}
+              onClick={() => document.getElementById('fileInput')?.click()}
               className="bg-white p-2 rounded-full shadow-md"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,14 +212,7 @@ const DrawingCanvas: React.FC = () => {
           <input
             id="fileInput"
             type="file"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                setUploading(true);
-                await chooseFile(e);
-                setUploading(false);
-              }
-            }}
+            onChange={chooseFile}
             className="hidden"
           />
           {uploading && (

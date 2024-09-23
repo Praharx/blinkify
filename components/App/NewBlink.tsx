@@ -1,19 +1,23 @@
-import React from 'react';
+'use client'
+
+import React, { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DrawingCanvas from './BlinkCard';
 import { Button } from "@/components/ui/button";
 import { useDrag } from 'react-dnd';
 export const runtime = "edge";
+
 interface DraggableButtonProps {
   content: string;
   type: string;
+  options?: string[];
 }
 
-const DraggableButton: React.FC<DraggableButtonProps> = ({ content, type }) => {
+const DraggableButton: React.FC<DraggableButtonProps> = ({ content, type, options }) => {
   const [, drag] = useDrag({
     type: 'BUTTON',
-    item: { content, type },
+    item: { content, type, options },
   });
 
   return (
@@ -25,18 +29,18 @@ const DraggableButton: React.FC<DraggableButtonProps> = ({ content, type }) => {
 };
 
 const NewBlink: React.FC = () => {
-  const buttonTypes = [
+  const [buttonTypes, setButtonTypes] = useState([
     { content: "Text Input", type: "text" },
     { content: "Email Input", type: "email" },
     { content: "URL Input", type: "url" },
     { content: "Number Input", type: "number" },
     { content: "Date Input", type: "date" },
     { content: "DateTime Input", type: "datetime-local" },
-    { content: "Checkbox", type: "checkbox" },
-    { content: "Radio Button", type: "radio" },
+    { content: "Checkbox", type: "checkbox", options: ["Option 1"] },
+    { content: "Radio Button", type: "radio", options: ["Option 1", "Option 2"] },
     { content: "Textarea", type: "textarea" },
-    { content: "Select Dropdown", type: "select" },
-  ];
+    { content: "Select Dropdown", type: "select", options: ["Option 1", "Option 2", "Option 3"] },
+  ]);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -48,6 +52,7 @@ const NewBlink: React.FC = () => {
               key={index}
               content={button.content}
               type={button.type}
+              options={button.options}
             />
           ))}
         </div>
@@ -66,6 +71,7 @@ const NewBlink: React.FC = () => {
                 <li>Drag and drop elements from the left panel to the canvas.</li>
                 <li>Use the canvas to arrange your elements as needed.</li>
                 <li>Click on an element to edit its properties.</li>
+                <li>For select dropdowns, radio buttons, and checkboxes, you can edit options after dragging.</li>
                 <li>Save your work frequently to avoid losing progress.</li>
               </ul>
             </div>
