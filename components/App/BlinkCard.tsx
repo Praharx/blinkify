@@ -105,6 +105,16 @@ const DrawingCanvas: React.FC = () => {
     );
   }, []);
 
+  const handleCheckboxChange = useCallback((id: number, value: string) => {
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? { ...item, content: value }
+          : item
+      )
+    );
+  }, []);
+
   const handleAddOption = useCallback((id: number) => {
     setDroppedItems((prevItems) =>
       prevItems.map((item) =>
@@ -203,13 +213,21 @@ const DrawingCanvas: React.FC = () => {
                 className="mb-2"
               />
             )}
+            
             {item.type === 'checkbox' && (
-              <Input
+              <div className="flex items-center">
+                <input
+                type="checkbox"
+                id={`checkbox-${item.id}`}
+                className="mr-2"
+                />
+                <Input
                 value={item.content}
-                onChange={(e) => handleOptionChange(item.id, 0, e.target.value)}
+                onChange={(e) => {e.preventDefault(); handleCheckboxChange(item.id, e.target.value)}}
                 placeholder="Checkbox label"
-                className="mb-2"
-              />
+                className="text-white"
+                />
+              </div>
             )}
             {(item.type === 'select' || item.type === 'radio') && item.options?.map((option, index) => (
               <div key={index} className="flex items-center space-x-2">
