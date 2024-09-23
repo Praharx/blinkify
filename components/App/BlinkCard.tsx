@@ -14,6 +14,7 @@ interface DroppedItem {
   type: string;
   options?: string[];
   isEditing?: boolean;
+  question?: string; // New field for radio button question
 }
 
 interface DragItem {
@@ -38,7 +39,8 @@ const DrawingCanvas: React.FC = () => {
         content: item.content, 
         type: item.type, 
         options: item.options,
-        isEditing: false
+        isEditing: false,
+        question: item.type === 'radio' ? 'Enter your question here' : undefined
       };
       setDroppedItems((prevItems) => [...prevItems, newItem]);
     },
@@ -123,6 +125,14 @@ const DrawingCanvas: React.FC = () => {
     );
   }, []);
 
+  const handleQuestionChange = useCallback((id: number, question: string) => {
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, question } : item
+      )
+    );
+  }, []);
+
   const renderInput = useCallback((item: DroppedItem) => {
     const baseClassName = "w-full px-3 sm:px-4 py-2 text-sm sm:text-base text-white bg-[#1F2226] border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500";
 
@@ -133,14 +143,29 @@ const DrawingCanvas: React.FC = () => {
     return (
       <div className="flex flex-col space-y-2">
         <div className="flex items-center space-x-2">
-          {item.type === 'checkbox' || item.type === 'radio' ? (
+          {item.type === 'checkbox' ? (
             <div className="flex items-center">
               <input
-                type={item.type}
-                id={`${item.type}-${item.id}`}
+                type="checkbox"
+                id={`checkbox-${item.id}`}
                 className="mr-2"
               />
-              <label htmlFor={`${item.type}-${item.id}`} className="text-white">{item.content}</label>
+              <label htmlFor={`checkbox-${item.id}`} className="text-white">{item.content}</label>
+            </div>
+          ) : item.type === 'radio' ? (
+            <div className="flex flex-col w-full">
+              <p className="text-white font-semibold mb-2">{item.question}</p>
+              {item.options?.map((option, index) => (
+                <div key={index} className="flex items-center mb-1">
+                  <input
+                    type="radio"
+                    id={`radio-${item.id}-${index}`}
+                    name={`radio-group-${item.id}`}
+                    className="mr-2"
+                  />
+                  <label htmlFor={`radio-${item.id}-${index}`} className="text-white">{option}</label>
+                </div>
+              ))}
             </div>
           ) : item.type === 'textarea' ? (
             <textarea
@@ -161,16 +186,32 @@ const DrawingCanvas: React.FC = () => {
               className={baseClassName}
             />
           )}
-          <Button onClick={(e) => {e.preventDefault(); handleRemove(item.id)}} className="text-white px-3 py-1 rounded-lg hover:bg-red-600 transition duration-300">🗑️</Button>
+          <Button onClick={(e) =>{ e.preventDefault(); handleRemove(item.id)}} className="text-white px-3 py-1 rounded-lg hover:bg-red-600 transition duration-300">🗑️</Button>
           {(item.type === 'select' || item.type === 'radio' || item.type === 'checkbox') && (
-            <Button onClick={(e) =>{e.preventDefault(); handleEdit(item.id)}} className="text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition duration-300">
+            <Button onClick={(e) => {e.preventDefault(); handleEdit(item.id)}} className="text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition duration-300">
               {item.isEditing ? '✔️' : '✏️'}
             </Button>
           )}
         </div>
         {item.isEditing && (item.type === 'select' || item.type === 'radio' || item.type === 'checkbox') && (
           <div className="ml-4 space-y-2">
-            {item.options?.map((option, index) => (
+            {item.type === 'radio' && (
+              <Input
+                value={item.question}
+                onChange={(e) => handleQuestionChange(item.id, e.target.value)}
+                placeholder="Enter your question here"
+                className="mb-2"
+              />
+            )}
+            {item.type === 'checkbox' && (
+              <Input
+                value={item.content}
+                onChange={(e) => handleOptionChange(item.id, 0, e.target.value)}
+                placeholder="Checkbox label"
+                className="mb-2"
+              />
+            )}
+            {(item.type === 'select' || item.type === 'radio') && item.options?.map((option, index) => (
               <div key={index} className="flex items-center space-x-2">
                 <Input
                   value={option}
@@ -180,12 +221,14 @@ const DrawingCanvas: React.FC = () => {
                 <Button onClick={(e) => {e.preventDefault(); handleRemoveOption(item.id, index)}} className="text-white px-2 py-1 rounded-lg hover:bg-red-600 transition duration-300">-</Button>
               </div>
             ))}
-            <Button onClick={(e) => {e.preventDefault(); handleAddOption(item.id)}} className="text-white px-2 py-1 rounded-lg hover:bg-green-600 transition duration-300">+ Add Option</Button>
+            {(item.type === 'select' || item.type === 'radio') && (
+              <Button onClick={(e) => {e.preventDefault(); handleAddOption(item.id)}} className="text-white px-2 py-1 rounded-lg hover:bg-green-600 transition duration-300">+ Add Option</Button>
+            )}
           </div>
         )}
       </div>
     );
-  }, [handleEdit, handleOptionChange, handleAddOption, handleRemoveOption]);
+  }, [handleEdit, handleOptionChange, handleAddOption, handleRemoveOption, handleQuestionChange]);
 
   return (
     //@ts-ignore
@@ -253,6 +296,7 @@ const DrawingCanvas: React.FC = () => {
       </form>
     </div>
   );
+
 };
 
 export default DrawingCanvas;
