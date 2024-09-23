@@ -4,7 +4,8 @@ const nextConfig = {
     domains: [
       "images.unsplash.com", 
       "assets.aceternity.com",
-      "unsplash.com"
+      "unsplash.com",
+      "wallpapercave.com"
     ],
   },
   experimental: {

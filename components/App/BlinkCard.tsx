@@ -133,8 +133,10 @@ const DrawingCanvas: React.FC = () => {
       {/* Header */}
       <div className="text-center mb-4">
         <div className="w-full relative">
-          <img
+          <Image
             src={imagePreview}
+            width={500}
+            height={400}
             alt="Description of the image"
           />
           <div className="absolute top-2 right-2">
