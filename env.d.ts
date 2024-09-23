@@ -14,5 +14,7 @@ declare namespace NodeJS {
         NEXT_PUBLIC_ACCESS_KEY_ID: string;
         NEXT_PUBLIC_ACCESS_KEY_PASSWORD: string;
         NEXT_PUBLIC_CLERK_JWT_KEY: string;
+        DATABASE_URL: string;
+        DIRECT_URL: string;
     }
   }

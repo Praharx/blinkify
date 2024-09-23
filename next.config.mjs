@@ -9,6 +9,8 @@ const nextConfig = {
     NEXT_PUBLIC_ACCESS_KEY_ID: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
     NEXT_PUBLIC_ACCESS_KEY_PASSWORD: process.env.NEXT_PUBLIC_ACCESS_KEY_PASSWORD,
     NEXT_PUBLIC_CLERK_JWT_KEY: process.env.NEXT_PUBLIC_CLERK_JWT_KEY,
+    DATABASE_URL: process.env.DATABASE_URL,
+    DIRECT_URL: process.env.DIRECT_URL,
   },
   images: {
     domains: [

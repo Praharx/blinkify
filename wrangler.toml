@@ -16,8 +16,9 @@ pages_build_output_dir = ".vercel/output/static"
 # - https://developers.cloudflare.com/pages/functions/bindings/#environment-variables
 # Note: Use secrets to store sensitive data.
 # - https://developers.cloudflare.com/pages/functions/bindings/#secrets
-# [vars]
-# MY_VARIABLE = "production_value"
+[vars]
+DATABASE_URL = "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMzkxZTUxNDEtMDc5OC00MjRlLWJkYzktNjU1OGI5YWFlY2VlIiwidGVuYW50X2lkIjoiYTI0ZmJjZWQ2ZDNhZGNlYTc1NTI1MTRhNWE0MGNlZjY2MTA3ZjUwNzA0MTg3NmFkOWRmNDk3ZWE4MmM5MjIwYiIsImludGVybmFsX3NlY3JldCI6ImFiYThhMzJmLTk4NjMtNGRiYi05MTlhLWIyNjE1MTVmNTEyOCJ9.5XgiHQMaPkbJ9iqiaSOxaatu5-r5-K6pEvuyOyAfV9U"
+DIRECT_URL = "postgresql://blinkify_owner:HmdJvNA7Epo0@ep-square-salad-a1yq3776.ap-southeast-1.aws.neon.tech/blinkify?sslmode=require"
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#workers-ai
