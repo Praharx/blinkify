@@ -84,12 +84,12 @@ export const FloatingNav = ({
               </Button>
             }
             {!isSignedIn ? (
-              <SignInButton>
+              <Link href={`https://civil-spaniel-15.accounts.dev/sign-in?redirect_url=${encodeURIComponent(window.location.origin)}%2Fdashboard`}>
                 <Button className="border text-sm font-medium relative border-neutral-200 border-white/[0.2] text-white px-4 py-2 rounded-full">
                   <span>Login</span>
                   <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
                 </Button>
-              </SignInButton>
+              </Link>
             ) : (
               <Link href="/dashboard">
                 <Button className="border text-sm font-medium relative border-neutral-200 border-white/[0.2] text-white px-4 py-2 rounded-full">
@@ -98,12 +98,12 @@ export const FloatingNav = ({
                 </Button>
               </Link>
             )}
-            {!isSignedIn ?<SignUpButton>
+            {!isSignedIn ?<Link href={`https://civil-spaniel-15.accounts.dev/sign-up?redirect_url=${encodeURIComponent(window.location.origin)}%2Fdashboard`}>
             <Button className="border text-sm font-medium relative border-neutral-200 border-white/[0.2] text-white px-4 py-2 rounded-full">
               <span>SignUp</span>
               <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
             </Button>
-            </SignUpButton>
+            </Link>
             :
               <SignOutButton>
                 <Button className="border text-sm font-medium relative border-neutral-200 border-white/[0.2] text-white px-4 py-2 rounded-full">
