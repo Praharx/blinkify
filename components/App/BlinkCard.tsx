@@ -71,10 +71,8 @@ const DrawingCanvas: React.FC = () => {
       formData.set("Content-Type", response.data.fields["Content-Type"]);
       formData.append("file", file);
 
-      console.log(preSignedUrl, "::::", formData);
       const res = await axios.post(preSignedUrl, formData);
 
-      console.log(`${CLOUDFRONT_URL}${response.data.fields.key}`)
       setImagePreview(`${CLOUDFRONT_URL}${response.data.fields.key}`);
       setUploading(false)
 
@@ -141,7 +139,8 @@ const DrawingCanvas: React.FC = () => {
           />
           <div className="absolute top-2 right-2">
             <button
-              onClick={() => document.getElementById('fileInput')?.click()}
+            //@ts-ignore
+              onClick={(e) => {document.getElementById('fileInput')?.click(); chooseFile(e)}}
               className="bg-white p-2 rounded-full shadow-md"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
