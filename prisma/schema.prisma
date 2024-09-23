@@ -23,9 +23,22 @@ model User {
 }
 
 model Blink {
-  id    String @id @default(cuid())
+  id    String @id @default(uuid())
   userId String
   user   User   @relation(fields: [userId], references: [id])  
+  blinkName String
+  blinkDescription String
+  imagePreview String
+  submitText String
+  amount Int
+  buttonTypes SelectedOptions[]
 }
 
-
+model SelectedOptions {
+  id    String @id @default(uuid())
+  blinkId String
+  blink   Blink   @relation(fields: [blinkId], references: [id])
+  content String
+  type String
+  options String[]
+}

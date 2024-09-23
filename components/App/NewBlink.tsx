@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { useDrag } from 'react-dnd';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
+import { useUser } from '@clerk/nextjs';
+import { Toaster, toast } from "sonner"
+import axios from 'axios';
 export const runtime = "edge";
 
 interface DraggableButtonProps {
@@ -29,7 +32,7 @@ interface DroppedItem {
 interface SelectedOptions {
   content: string;
   type: string;
-  options?: string[];
+  options: string[];
 }
 
 const DraggableButton: React.FC<DraggableButtonProps> = ({ content, type, options }) => {
@@ -65,28 +68,52 @@ const NewBlink: React.FC = () => {
     { content: "Select Dropdown", type: "select", options: ["Option 1", "Option 2"] },
   ]);
 
-  const handleSubmit = () => {
-    const selectedOptions: SelectedOptions[] = droppedItems.map((items, index) => {
+  const { user } = useUser();
+  const handleSubmit = async() => {
+     const selectedOptions: SelectedOptions[] = droppedItems.map((items, index) => {
       if (items.type === "radio") {
         return {
           content: items.question as string,
-          options: items.options,
+          options: items.options as string[],
           type: items.type,
         }
       } else if (items.type === "select") {
         return {
           content: items.content,
-          options: items.options,
+          options: items.options as string[],
           type: items.type,
         }
       } else {
         return {
           content: items.content,
+          options: [],
           type: items.type
         }
       }
     })
     console.log("selectedOptions:::::",selectedOptions);
+
+    const response = await axios.post(`${window.location.origin}/api/app/createBlink`,{
+      blinkName,
+      blinkDescription,
+      imagePreview,
+      submitText,
+      amount: Number(amount),
+      buttonTypes: selectedOptions,
+      userId: user?.id
+    },{
+      withCredentials: true,
+      headers: {
+        "Authorization": "sk_test_lAcxYuFjIzlH30eyImE5V70A4Wdpt0f18MWZvB2A6B"
+      }
+    })
+
+    if(!response.data.success){
+      toast.error("Failed to create blink")
+      return
+    }
+    toast.success("Blink created successfully")
+
   };
 
   return (
@@ -111,7 +138,8 @@ const NewBlink: React.FC = () => {
             {!Number(amount) ? <Label className='text-red-500'>Please enter a valid number</Label> : <Label>Amount for which to sell the product(in SOL)</Label>}
             <Input type="text" className="w-full" value={amount} onChange={(e) => {console.log(amount); setAmount(e.target.value)}} />
           </div>
-          <Button onClick={handleSubmit} className="bg-[#1F2226] w-4/5 text-xl text-white border absolute bottom-4 border-gray-600 hover:bg-gray-700 transition-colors duration-200">Submit Blink</Button>
+          <Button disabled={!Number(amount)} onClick={handleSubmit} className="bg-[#1F2226] w-4/5 text-xl text-white border absolute bottom-4 border-gray-600 hover:bg-gray-700 transition-colors duration-200">Submit Blink</Button>
+          <Toaster />
         </div>
 
         {/* Instructions Section */}
