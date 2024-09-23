@@ -38,7 +38,7 @@ export const GET = async (req:NextRequest) => {
         const verifiedToken = await verifyToken(token, {
           jwtKey: CLERK_JWT_KEY,
           // TODO: Change this to the actual URL of your application
-          authorizedParties: ["http://localhost:3000"], // Replace with your authorized parties
+          authorizedParties: ["http://localhost:3000","https://main.blinkify.pages.dev"], // Replace with your authorized parties
         })
 
       } catch (error) {
