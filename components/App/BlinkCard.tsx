@@ -31,7 +31,7 @@ const DrawingCanvas: React.FC = () => {
   const [blinkDescription, setBlinkDescription] = useState('<Blink Description>');
   const [submitText, setSubmitText] = useState('<Your Submit Text>');
   const [uploading, setUploading] = useState(false);
-  const [imagePreview, setImagePreview] = useState("https://wallpapercave.com/wp/wp9800926.jpg");
+  const [imagePreview, setImagePreview] = useState("https://d70djocle7hv2.cloudfront.net//uploads/27/0.8158512747091613/image.jpg");
 
   const [, drop] = useDrop<DragItem, void, {}>({
     accept: 'BUTTON',

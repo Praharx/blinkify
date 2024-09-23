@@ -15,7 +15,8 @@ const nextConfig = {
       "images.unsplash.com", 
       "assets.aceternity.com",
       "unsplash.com",
-      "wallpapercave.com"
+      "wallpapercave.com",
+      "d70djocle7hv2.cloudfront.net"
     ],
   },
   experimental: {
