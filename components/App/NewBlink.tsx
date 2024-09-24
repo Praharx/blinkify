@@ -10,6 +10,7 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { useUser } from '@clerk/nextjs';
 import { Toaster, toast } from "sonner"
+import { motion } from 'framer-motion';
 import axios from 'axios';
 export const runtime = "edge";
 
@@ -182,23 +183,26 @@ const NewBlink: React.FC = ({open}: {open?: boolean}) => {
         </div>
 
         {/* Instructions Section */}
-        {
-          !open &&
-          <div className='w-1/4 p-4 border-t xl:border-t-0 xl:border-l border-neutral-700'>
-            <div className='bg-neutral-900 rounded p-4 font-serif text-gray-400 h-full flex flex-col'>
-              <p className='mb-2 font-bold text-white text-xl'>Instructions</p>
-              <div className='flex-grow overflow-y-auto mb-2 min-h-[100px] xl:min-h-0'>
-                <ul className='list-disc pl-5'>
-                  <li>Drag and drop elements from the left panel to the canvas.</li>
-                  <li>Use the canvas to arrange your elements as needed.</li>
-                  <li>Click on an element to edit its properties.</li>
-                  <li>For select dropdowns, radio buttons, and checkboxes, you can edit options after dragging.</li>
-                  <li>Please fill the appropriate amount for your product<span className='text-yellow-300'> This is the amount for which you want to sell the product</span>.</li>
-                </ul>
-              </div>
+        <motion.div
+          initial={{ opacity: 1, x: 0 }}
+          animate={{ opacity: open ? 0 : 1, x: open ? 100 : 0 }}
+          transition={{ duration: 0.5 }}
+          className={`w-1/4 p-4 border-t xl:border-t-0 xl:border-l border-neutral-700`}
+          style={{ display: open ? 'none' : 'block' }}
+        >
+          <div className='bg-neutral-900 rounded p-4 font-serif text-gray-400 h-full flex flex-col'>
+            <p className='mb-2 font-bold text-white text-xl'>Instructions</p>
+            <div className='flex-grow overflow-y-auto mb-2 min-h-[100px] xl:min-h-0'>
+              <ul className='list-disc pl-5'>
+                <li>Drag and drop elements from the left panel to the canvas.</li>
+                <li>Use the canvas to arrange your elements as needed.</li>
+                <li>Click on an element to edit its properties.</li>
+                <li>For select dropdowns, radio buttons, and checkboxes, you can edit options after dragging.</li>
+                <li>Please fill the appropriate amount for your product<span className='text-yellow-300'> This is the amount for which you want to sell the product</span>.</li>
+              </ul>
             </div>
           </div>
-        }
+        </motion.div>
       </div>
     </DndProvider>
   );
