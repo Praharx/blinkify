@@ -105,7 +105,7 @@ const NewBlink: React.FC = () => {
       withCredentials: true,
       headers: {
         "Authorization": "sk_test_lAcxYuFjIzlH30eyImE5V70A4Wdpt0f18MWZvB2A6B"
-      }
+    }
     })
 
     if(!response.data.success){
@@ -120,7 +120,8 @@ const NewBlink: React.FC = () => {
     <DndProvider backend={HTML5Backend}>
       <div className='flex flex-col md:flex-row min-h-screen w-screen bg-neutral-900'>
         {/* Button Section */}
-        <div className='w-full lg:w-1/6 p-4 border-b md:border-b-0 md:border-r border-neutral-700 flex flex-col overflow-y-auto'>
+        <div className='w-full lg:w-[25%] p-4 border-b md:border-b-0 md:border-r border-neutral-700 flex flex-col overflow-y-auto'>
+          <p className='mb-6 font-bold text-white text-xl'>Input Button Types</p>
           {buttonTypes.map((button, index) => (
             <DraggableButton
               key={index}
@@ -132,18 +133,31 @@ const NewBlink: React.FC = () => {
         </div>
 
         {/* Drawing Canvas Section */}
-        <div className='w-[10vw] relative flex flex-col items-center gap-4 lg:w-[10vw] p-4 flex-grow'>
+        <div className='relative flex flex-col items-center gap-4  p-4 flex-grow'>
           <DrawingCanvas droppedItems={droppedItems} setDroppedItems={setDroppedItems} blinkDescription={blinkDescription} blinkName={blinkName} submitText={submitText} imagePreview={imagePreview} setImagePreview={setImagePreview} setBlinkName={setBlinkName} setBlinkDescription={setBlinkDescription} setSubmitText={setSubmitText} amount={amount} />
-          <div>
-            {!Number(amount) ? <Label className='text-red-500'>Please enter a valid number</Label> : <Label>Amount for which to sell the product(in SOL)</Label>}
-            <Input type="text" className="w-full" value={amount} onChange={(e) => {console.log(amount); setAmount(e.target.value)}} />
+          <div className="p-4 mt-4 bg-[#1F2226] rounded-lg shadow-md w-full max-w-[90vw] sm:max-w-sm mx-auto">
+            <Label className={`block text-md font-bold mb-2 ${!Number(amount) ? 'text-red-500' : 'text-gray-300'}`}>
+              {!Number(amount) ? 'Please enter a valid number' : 'Amount for which to sell the product (in SOL)'}
+            </Label>
+            <Input 
+              type="text" 
+              className="w-full p-2  bg-[#1F2226] text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+              value={amount} 
+              onChange={(e) => {console.log(amount); setAmount(e.target.value)}} 
+            />
           </div>
-          <Button disabled={!Number(amount)} onClick={handleSubmit} className="bg-[#1F2226] w-4/5 text-xl text-white border absolute bottom-4 border-gray-600 hover:bg-gray-700 transition-colors duration-200">Submit Blink</Button>
+          <Button 
+            disabled={!Number(amount)} 
+            onClick={handleSubmit} 
+            className={`bg-[#1F2226] w-4/5 text-xl text-white border absolute bottom-4 border-gray-600 hover:bg-gray-700 transition-colors duration-200 `}
+          >
+            Submit Blink
+          </Button>
           <Toaster />
         </div>
 
         {/* Instructions Section */}
-        <div className='hidden xl:block w-full lg:w-2/6 xl:w-1/5 mr-8 p-4 border-t xl:border-t-0 xl:border-l border-neutral-700'>
+        <div className='hidden xl:block w-[30%] mr-8 p-4 border-t xl:border-t-0 xl:border-l border-neutral-700'>
           <div className='bg-neutral-900 rounded p-4 font-serif text-gray-400 h-full flex flex-col'>
             <p className='mb-2 font-bold text-white text-xl'>Instructions</p>
             <div className='flex-grow overflow-y-auto mb-2 min-h-[100px] xl:min-h-0'>
@@ -152,7 +166,7 @@ const NewBlink: React.FC = () => {
                 <li>Use the canvas to arrange your elements as needed.</li>
                 <li>Click on an element to edit its properties.</li>
                 <li>For select dropdowns, radio buttons, and checkboxes, you can edit options after dragging.</li>
-                <li>Save your work frequently to avoid losing progress.</li>
+                <li>Please fill the appropriate amount for your product<span className='text-yellow-300'> This is the amount for which you want to sell the product</span>.</li>
               </ul>
             </div>
           </div>

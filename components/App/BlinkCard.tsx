@@ -306,7 +306,7 @@ const DrawingCanvas: React.FC<{
 
     return (
       //@ts-ignore
-      <div ref={drop} className="bg-[#1F2226] shadow-blue-400 my-4 p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-[90vw] sm:max-w-sm mx-auto">
+      <div ref={drop}  style={{ boxShadow: '0px 8px 10px 7px rgba(96, 165, 250, 0.4)' }} className="bg-[#1F2226] shadow-blue-400 my-4 p-4 sm:p-6 rounded-xl w-full max-w-[90vw] sm:max-w-sm mx-auto shadow-[10px 30px 15px rgba(96, 165, 250, 0.4)]">
         {/* Header */}
         <div className="text-center mb-4">
           <div className="w-full relative">
@@ -368,7 +368,6 @@ const DrawingCanvas: React.FC<{
             className="w-full py-2 bg-blue-600 text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-blue-700 transition duration-300 text-center cursor-pointer"
           />
         </form>
-        <button onClick={() => console.log(droppedItems)}>click me</button>
       </div>
     );
 
