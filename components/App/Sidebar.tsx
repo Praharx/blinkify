@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "../ui/sidebar";
 import {
   IconArrowLeft,
@@ -113,25 +113,58 @@ export const LogoIcon = () => {
 };
 
 export const Dashboard = () => {
+  const [activeBlinkCards, setActiveBlinkCards] = useState([{
+    id: 1,
+    imagePreview: "https://via.placeholder.com/150",
+    blinkName: "Blink 1",
+    blinkDescription: "This is the first blink",
+    amount: 100
+  }]);
+
+  useEffect(() => {
+    // Fetch active blinks from API
+    const fetchActiveBlinkCards = async () => {
+      // try {
+      //   const response = await axios.get('/api/active-blinks');
+      //   setActiveBlinkCards(response.data);
+      // } catch (error) {
+      //   console.error('Error fetching active blinks:', error);
+      // }
+    };
+
+    fetchActiveBlinkCards();
+  }, []);
+
   return (
     <div className="flex flex-1">
-      <div className="p-2 md:p-10 rounded-tl-2xl border  border-neutral-700  bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-        <div className="flex gap-2">
-          {[...new Array(4)].map((i) => (
-            <div
-              key={"first-array" + i}
-               className="h-20 w-full rounded-lg bg-neutral-800 animate-pulse"
-            ></div>
-          ))}
-        </div>
-        <div className="flex gap-2 flex-1">
-          {[...new Array(2)].map((i) => (
-            <div
-              key={"second-array" + i}
-              className="h-full w-full rounded-lg bg-neutral-800 animate-pulse"
-            ></div>
-          ))}
-        </div>
+      <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-700 bg-neutral-900 flex flex-col gap-4 flex-1 w-full h-full">
+        <h2 className="text-2xl font-bold text-white mb-4">Active Blinks</h2>
+        {activeBlinkCards.length === 0 ? (
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="text-neutral-400">No active blinks found.</div>
+            <Link href="/dashboard/newBlink">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                Create New Blink
+              </button>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {activeBlinkCards.map((blink) => (
+              <div key={blink.id} className="bg-neutral-800 rounded-lg p-4 shadow-md">
+                <img src={blink.imagePreview} alt={blink.blinkName} className="w-full h-40 object-cover rounded-md mb-3" />
+                <h3 className="text-lg font-semibold text-white mb-2">{blink.blinkName}</h3>
+                <p className="text-neutral-400 mb-3">{blink.blinkDescription}</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-400">{blink.amount} SOL</span>
+                  <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-300">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
