@@ -52,6 +52,7 @@ const DraggableButton: React.FC<DraggableButtonProps> = ({ content, type, option
 
 const NewBlink: React.FC = ({open}: {open?: boolean}) => {
   const [droppedItems, setDroppedItems] = useState<DroppedItem[]>([]);
+  const [submitting, setSubmitting] = useState(false);
   const [amount, setAmount] = useState("10");
   const [blinkName, setBlinkName] = useState('<Blink Name>');
   const [blinkDescription, setBlinkDescription] = useState('<Blink Description>');
@@ -173,11 +174,14 @@ const NewBlink: React.FC = ({open}: {open?: boolean}) => {
             />
           </div>
           <Button 
-            disabled={!Number(amount)} 
-            onClick={handleSubmit} 
-            className="bg-[#1F2226] w-4/5 text-xl text-white border absolute bottom-4 border-gray-600 hover:bg-gray-700 transition-colors duration-200"
+            disabled={!Number(amount) || submitting} 
+            onClick={() => {
+              setSubmitting(true);
+              handleSubmit().finally(() => setSubmitting(false));
+            }} 
+            className={`bg-[#1F2226] w-4/5 text-xl text-white border absolute bottom-4 border-gray-600 hover:bg-gray-700 transition-colors duration-200 `}
           >
-            Submit Blink
+            {submitting ? "Submitting..." : "Submit Blink"}
           </Button>
           <Toaster />
         </div>
