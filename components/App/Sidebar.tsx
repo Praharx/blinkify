@@ -151,9 +151,9 @@ export const Dashboard = ({open}: {open?: boolean}) => {
   return (
     <div className="flex flex-1">
       <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-700 bg-neutral-900 flex flex-col gap-4 flex-1 w-full">
-        <h2 className="text-2xl font-bold text-white mb-4">Active Blinks</h2>
+        <h2 className="text-4xl font-bold text-white mb-4">Active Blinks</h2>
         <div className="mb-4 flex items-center">
-          <label className="text-white mr-2">Show Verified Only</label>
+          <label className="text-white text-lg mr-2">Show Verified Only</label>
           <ToggleSwitch
             defaultChecked={filterVerified}
             onChange={() => setFilterVerified(!filterVerified)}
@@ -161,7 +161,7 @@ export const Dashboard = ({open}: {open?: boolean}) => {
             changeToggleVal={setFilterVerified}
           />
         </div>
-        {filteredBlinks.length === 0 ? (
+        {activeBlinkCards.length === 0 ? (
           <div className="text-neutral-400 text-center">
             <p>No active blinks found.</p>
             <div className="mt-4">
