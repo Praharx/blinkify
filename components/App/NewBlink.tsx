@@ -49,7 +49,7 @@ const DraggableButton: React.FC<DraggableButtonProps> = ({ content, type, option
   );
 };
 
-const NewBlink: React.FC = () => {
+const NewBlink: React.FC = ({open}: {open?: boolean}) => {
   const [droppedItems, setDroppedItems] = useState<DroppedItem[]>([]);
   const [amount, setAmount] = useState("10");
   const [blinkName, setBlinkName] = useState('<Blink Name>');
@@ -69,6 +69,7 @@ const NewBlink: React.FC = () => {
   const [isLargeScreen, setIsLargeScreen] = useState(true);
 
   const { user } = useUser();
+  console.log(open, "From NewBlink")
 
   useEffect(() => {
     const handleResize = () => {
@@ -181,7 +182,8 @@ const NewBlink: React.FC = () => {
         </div>
 
         {/* Instructions Section */}
-        {isLargeScreen && (
+        {
+          !open &&
           <div className='w-1/4 p-4 border-t xl:border-t-0 xl:border-l border-neutral-700'>
             <div className='bg-neutral-900 rounded p-4 font-serif text-gray-400 h-full flex flex-col'>
               <p className='mb-2 font-bold text-white text-xl'>Instructions</p>
@@ -196,7 +198,7 @@ const NewBlink: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
+        }
       </div>
     </DndProvider>
   );

@@ -19,7 +19,7 @@ export function SidebarDemo({children}: {children: any}) {
   if(!isLoaded || !isSignedIn) {
     return null;
   }
-
+console.log(open, "From Sidebar")
   const links = [
     {
       label: "Dashboard",
@@ -55,7 +55,7 @@ export function SidebarDemo({children}: {children: any}) {
     <div
       className={cn(
         "rounded-md flex flex-col md:flex-row  bg-neutral-800 flex-1 mx-auto border border-neutral-700 overflow-hidden",
-        "h-screen w-screen" // for your use case, use `h-screen` instead of `h-[60vh]`
+        "h-screen w-screen" 
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
@@ -84,7 +84,7 @@ export function SidebarDemo({children}: {children: any}) {
           </div>
         </SidebarBody>
       </Sidebar>
-      {children}
+      {React.cloneElement(children, { open })}
     </div>
   );
 }
@@ -112,7 +112,7 @@ export const LogoIcon = () => {
   );
 };
 
-export const Dashboard = () => {
+export const Dashboard = ({open}: {open?: boolean}) => {
   const [activeBlinkCards, setActiveBlinkCards] = useState([{
     id: 1,
     imagePreview: "https://via.placeholder.com/150",
@@ -120,6 +120,7 @@ export const Dashboard = () => {
     blinkDescription: "This is the first blink",
     amount: 100
   }]);
+  console.log(open, "From Dashboard")
 
   useEffect(() => {
     // Fetch active blinks from API
@@ -140,14 +141,7 @@ export const Dashboard = () => {
       <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-700 bg-neutral-900 flex flex-col gap-4 flex-1 w-full h-full">
         <h2 className="text-2xl font-bold text-white mb-4">Active Blinks</h2>
         {activeBlinkCards.length === 0 ? (
-          <div className="flex flex-col items-center justify-center space-y-4">
-            <div className="text-neutral-400">No active blinks found.</div>
-            <Link href="/dashboard/newBlink">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
-                Create New Blink
-              </button>
-            </Link>
-          </div>
+          <div className="text-neutral-400">No active blinks found.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {activeBlinkCards.map((blink) => (
